@@ -1,7 +1,7 @@
-import { API_URL } from "@src/shared/config";
+import { API_URL } from "@src/shared/configs";
 import cookie from "cookie";
 
-const handler = async (req, res: any) => {
+const authHandler = async (req, res: any) => {
   if (req.method !== "GET") {
     res.setHeader("Allow", ["GET"]);
     res.status(405).json({ message: `Method ${req.method} not allowed` });
@@ -33,4 +33,4 @@ const handler = async (req, res: any) => {
   }
 };
 
-export default handler;
+export default authHandler;

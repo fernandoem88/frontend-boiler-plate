@@ -11,9 +11,6 @@ const themeVariables = lessToJs(themePalettes, {
   stripPrefix: true,
 });
 
-// const path = require("path");
-// const pathToLessFileWithVariables = path.resolve("./styles/theme.less");
-
 const antdTheme = withLess({
   lessLoaderOptions: {
     /* ... */

@@ -1,5 +1,5 @@
-import { API_URL } from "@src/shared/config";
-import { StrapiResponse } from "@src/types";
+import { API_URL } from "@src/shared/configs";
+import { StrapiResponse } from "@src/shared/types";
 import cookie from "cookie";
 
 interface StrapiUser {
@@ -13,7 +13,7 @@ interface StrapiUser {
   updatedAt: string;
 }
 
-const handler = async (req, res: any) => {
+const loginHandler = async (req, res: any) => {
   if (req.method !== "POST") {
     res.setHeader("Allow", ["POST"]);
     res.status(405).json({ message: `Method ${req.method} not allowed` });
@@ -22,7 +22,7 @@ const handler = async (req, res: any) => {
 
   const { identifier, password } = req.body;
   try {
-    const strapiRes = await fetch(`${API_URL}/api/auth/local`, {
+    const strapiRes = await fetch(`${API_URL}/api/auth/local?populate=*`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -54,6 +54,7 @@ const handler = async (req, res: any) => {
           path: "/",
         })
       );
+
       res.status(200).send({ user: result.user, token: result.jwt });
       return;
     }
@@ -63,4 +64,4 @@ const handler = async (req, res: any) => {
   }
 };
 
-export default handler;
+export default loginHandler;

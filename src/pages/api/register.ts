@@ -1,5 +1,5 @@
-import { API_URL } from "@src/shared/config";
-import { StrapiResponse } from "@src/types";
+import { API_URL } from "@src/shared/configs";
+import { StrapiResponse } from "@src/shared/types";
 import cookie from "cookie";
 
 interface StrapiUser {
@@ -13,7 +13,7 @@ interface StrapiUser {
   updatedAt: string;
 }
 
-const handler = async (req, res: any) => {
+const registerHandler = async (req, res: any) => {
   if (req.method !== "POST") {
     res.setHeader("Allow", ["POST"]);
     res.status(405).json({ message: `Method ${req.method} not allowed` });
@@ -63,4 +63,4 @@ const handler = async (req, res: any) => {
   }
 };
 
-export default handler;
+export default registerHandler;

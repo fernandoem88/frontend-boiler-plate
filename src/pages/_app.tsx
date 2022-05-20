@@ -7,29 +7,28 @@ import "@styles/theme.custom.less";
 */
 import "@styles/globals.css";
 import React from "react";
-import { AuthProvider } from "@src/providers/AuthContext";
-import { AuthProvider } from "@src/providers/";
-import { createGlobalStyle, css } from "styled-components";
+import { AuthProvider } from "@src/shared/providers/AuthContext";
+import { ServerDataProvider } from "@src/shared/providers/ApiDataContext";
+import { GlobalStyle } from "@src/shared/components/GlobalStyle";
 
-const GlobalStyle = createGlobalStyle(
-  {},
-  css`
-    body {
-    }
-  `
-);
-
+const ErrorWrapper: React.FC<{
+  error?: { message: string; status: number };
+}> = ({ error, children }) => {
+  if (error) {
+    return <div>{`${error.status}: ${error.message}`}</div>;
+  }
+  return <>{children}</>;
+};
 function MyApp({ Component, pageProps }) {
-  const [ctx, setCtx] = React.useState({ login: null, error: null });
-  const { serverSide, ...props } = pageProps;
-  const { error, data } = pageProps.serverSide || {};
-  console.log("....serverSide", error, data);
+  const { data, error } = pageProps;
 
   return (
-    <>
+    <ServerDataProvider data={data}>
       <GlobalStyle />
-      <Component {...props} />
-    </>
+      <ErrorWrapper error={error}>
+        <Component {...pageProps} />
+      </ErrorWrapper>
+    </ServerDataProvider>
   );
 }
 
