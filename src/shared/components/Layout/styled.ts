@@ -1,4 +1,4 @@
-import { Layout, Menu, Breadcrumb } from "antd";
+import { Layout, Breadcrumb, Menu } from "antd";
 import styled from "styled-components";
 
 export const Root = styled.div.attrs({
@@ -87,3 +87,25 @@ export const Content = styled(Layout.Content).attrs({
   background: white;
 `;
 Content.displayName = "LayoutContent";
+
+export const LayoutBody = styled(Layout).attrs({
+  "data-tbsc-name": "Layout--LayoutBody",
+})<{}>`
+  padding: 0 24px 24px;
+`;
+LayoutBody.displayName = "LayoutLayoutBody";
+
+export const Paths = styled(Breadcrumb).attrs({
+  "data-tbsc-name": "Layout--Paths",
+})<{}>`
+  margin: 16px 0;
+`;
+Paths.displayName = "LayoutPaths";
+
+export const SideMenu = styled(Menu).attrs({
+  "data-tbsc-name": "Layout--SideMenu",
+})<{}>`
+  height: 100%;
+  border-right: 0;
+`;
+SideMenu.displayName = "LayoutSideMenu";

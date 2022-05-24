@@ -11,23 +11,13 @@ import { AuthProvider } from "@src/shared/providers/AuthContext";
 import { ServerDataProvider } from "@src/shared/providers/ApiDataContext";
 import { GlobalStyle } from "@src/shared/components/GlobalStyle";
 
-const ErrorWrapper: React.FC<{
-  error?: { message: string; status: number };
-}> = ({ error, children }) => {
-  if (error) {
-    return <div>{`${error.status}: ${error.message}`}</div>;
-  }
-  return <>{children}</>;
-};
 function MyApp({ Component, pageProps }) {
   const { data, error } = pageProps;
 
   return (
     <ServerDataProvider data={data}>
       <GlobalStyle />
-      <ErrorWrapper error={error}>
-        <Component {...pageProps} />
-      </ErrorWrapper>
+      <Component {...pageProps} />
     </ServerDataProvider>
   );
 }

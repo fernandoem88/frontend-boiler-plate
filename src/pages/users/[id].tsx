@@ -9,6 +9,7 @@ import { NEXT_URL } from "@src/shared/configs";
 
 interface Props {
   data: ServerData;
+  error?: any;
 }
 const UserPage: React.FC<Props> = (props) => {
   const router = useRouter();
@@ -16,17 +17,24 @@ const UserPage: React.FC<Props> = (props) => {
 
   const onAddFoodClick = () => {
     const { id } = router.query;
-    router.push(`/users/${id}?mode=create`);
+    router.replace(`/users/${id}?mode=create`);
   };
 
   const actions = (
     <>
-      <Button onClick={onAddFoodClick}>add new food</Button>
+      <Button disabled={!!props.error} onClick={onAddFoodClick}>
+        add new food
+      </Button>
     </>
   );
 
   return (
-    <Layout paths={paths} actions={actions} title="User dashboard">
+    <Layout
+      error={props.error}
+      paths={paths}
+      actions={actions}
+      title="User dashboard"
+    >
       <UserApp userId={+router.query.id} />
     </Layout>
   );
@@ -35,11 +43,11 @@ export type UserPageProps = Props;
 export default React.memo(UserPage);
 
 type ServerData = FetchedType<typeof getServerSideProps>["props"]["data"];
-export const getServerSideProps = async (ctx: any) => {
-  const { id } = ctx.query;
+export const getServerSideProps = async (ctx) => {
+  const { id: userId } = ctx.query;
 
   try {
-    const user = await services.fetchUserById(id);
+    const user = await services.fetchUserById(userId);
 
     const isManager = user.role?.name === "manager";
 
@@ -47,7 +55,7 @@ export const getServerSideProps = async (ctx: any) => {
       return {
         redirect: {
           permanent: false,
-          destination: "/managers/" + id,
+          destination: "/managers/" + userId,
         },
       };
     }

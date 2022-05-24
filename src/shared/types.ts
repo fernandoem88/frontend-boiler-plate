@@ -65,3 +65,8 @@ export enum FoodModalMode {
 export type FetchedType<Fn> = Fn extends (...args) => Promise<infer R>
   ? R
   : any;
+
+export interface AppError {
+  status: number;
+  message: string;
+}

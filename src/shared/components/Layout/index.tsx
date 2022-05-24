@@ -1,18 +1,15 @@
 import React from "react";
-import { Layout, Menu, Breadcrumb, MenuProps } from "antd";
-import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-} from "@ant-design/icons";
+import { Layout, Menu, Breadcrumb } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 
 import Head from "next/head";
 import * as sc from "./styled";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ItemType } from "antd/lib/menu/hooks/useItems";
+import { AppError } from "@src/shared/types";
 
-const { Header, Sider } = Layout;
+const { Header } = Layout;
 
 type MenuItem = ItemType & {
   link?: string;
@@ -24,6 +21,7 @@ interface Props {
   description?: string;
   paths?: (string | { label: string; link: string })[];
   actions?: JSX.Element | JSX.Element[];
+  error?: AppError;
   // menu?: MenuItem[];
   // nav?: MenuItem[];
 }
@@ -54,7 +52,16 @@ const sideMenu: MenuItem[] = [
   },
 ];
 
-const MainLayout: React.FC<Props> = (props) => {
+const ErrorWrapper: React.FC<{
+  error?: AppError;
+}> = ({ error, children }) => {
+  if (error) {
+    return <div>{`${error.status}: ${error.message}`}</div>;
+  }
+  return <>{children}</>;
+};
+
+const AppLayout: React.FC<Props> = (props) => {
   const {
     title = DEFAULT_TITLE,
     description = "calorie app",
@@ -81,29 +88,30 @@ const MainLayout: React.FC<Props> = (props) => {
         <Header className="header">
           <sc.Logo>Calories App</sc.Logo>
 
-          <Menu
-            theme="dark"
-            mode="horizontal"
-            // defaultSelectedKeys={["2"]}
-            items={navItems}
-            onSelect={handleMenuSelect}
-          />
+          {!props.error && (
+            <Menu
+              theme="dark"
+              mode="horizontal"
+              // defaultSelectedKeys={["2"]}
+              items={navItems}
+              onSelect={handleMenuSelect}
+            />
+          )}
         </Header>
         <Layout>
           <sc.Sider>
-            <Menu
+            <sc.SideMenu
               mode="inline"
               // defaultSelectedKeys={["1"]}
               defaultOpenKeys={["" + sideMenu[0].key]}
-              style={{ height: "100%", borderRight: 0 }}
               items={sideMenu}
               onSelect={handleMenuSelect}
             />
           </sc.Sider>
 
-          <Layout style={{ padding: "0 24px 24px" }}>
+          <sc.LayoutBody>
             <sc.ToolsBar>
-              <Breadcrumb style={{ margin: "16px 0" }}>
+              <sc.Paths>
                 {props.paths?.map((path, index) => {
                   const label =
                     typeof path === "string" ? (
@@ -113,17 +121,19 @@ const MainLayout: React.FC<Props> = (props) => {
                     );
                   return <Breadcrumb.Item key={index}>{label}</Breadcrumb.Item>;
                 })}
-              </Breadcrumb>
+              </sc.Paths>
               <sc.ActionsWrapper>{actions}</sc.ActionsWrapper>
             </sc.ToolsBar>
 
-            <sc.Content>{props.children}</sc.Content>
+            <sc.Content>
+              <ErrorWrapper error={props.error}>{props.children}</ErrorWrapper>
+            </sc.Content>
             <sc.Footer>Calories app {new Date().getFullYear()}</sc.Footer>
-          </Layout>
+          </sc.LayoutBody>
         </Layout>
       </Layout>
     </sc.Root>
   );
 };
-export type MainLayoutProps = Props;
-export default React.memo(MainLayout) as typeof MainLayout;
+export type AppLayoutProps = Props;
+export default React.memo(AppLayout) as typeof AppLayout;

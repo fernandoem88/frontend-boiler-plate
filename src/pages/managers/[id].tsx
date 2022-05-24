@@ -5,10 +5,10 @@ import * as services from "@src/shared/services";
 import Layout from "@src/shared/components/Layout";
 import { FetchedType } from "@src/shared/types";
 import { Button } from "antd";
-import { NEXT_URL } from "@src/shared/configs";
 
 interface Props {
   data: ServerData;
+  error?: any;
 }
 const ManagerPage: React.FC<Props> = (props) => {
   const router = useRouter();
@@ -21,12 +21,19 @@ const ManagerPage: React.FC<Props> = (props) => {
 
   const actions = (
     <>
-      <Button onClick={onAddFoodClick}>add new food</Button>
+      <Button disabled={!!props.error} onClick={onAddFoodClick}>
+        add new food
+      </Button>
     </>
   );
 
   return (
-    <Layout paths={paths} actions={actions} title="User dashboard">
+    <Layout
+      error={props.error}
+      paths={paths}
+      actions={actions}
+      title="User dashboard"
+    >
       <UserApp userId={+router.query.id} />
     </Layout>
   );

@@ -7,6 +7,7 @@ import {
   RoleBackend,
   Food,
 } from "./types";
+import { normalize } from "./helpers";
 
 const throwError = (response: any) => {
   if (!response.ok) {
@@ -64,9 +65,12 @@ export const fetchAllFoods = async () => {
       const food = { id: f.id, ...f.attributes };
       return food;
     }) as FoodBackend[];
+
+    const nnn = normalize(foods, (food) => {
+      return { id: "" + food.id, value: food };
+    });
     const normalized = foods.reduce(
       (acc, food) => {
-        const byId = { ...acc.byId };
         acc.ids.push(food.id);
         acc.byId[food.id] = food;
         return acc;

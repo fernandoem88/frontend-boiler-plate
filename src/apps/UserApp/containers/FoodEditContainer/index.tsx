@@ -36,11 +36,11 @@ const FoodModalContainer: React.FC<Props> = (props) => {
 
   const food = useServerData((s) => getFoodById(s, +foodId));
 
-  const [inDom, setInDom] = React.useState(false);
+  const [isClientSide, setIsClientSide] = React.useState(false);
   React.useEffect(() => {
-    setInDom(true);
+    setIsClientSide(true);
   }, []);
-  const visible = inDom && mode === FoodModalMode.edit;
+  const visible = isClientSide && mode === FoodModalMode.edit;
 
   return (
     <Modal

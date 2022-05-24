@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import FoodCreate from "../../components/FoodCreate";
 import { FoodModalMode } from "@src/shared/types";
 import * as services from "@src/shared/services";
-import { useUpdateServerData } from "@src/shared/providers/ApiDataContext";
+// import { useUpdateServerData } from "@src/shared/providers/ApiDataContext";
 
 interface Props {}
 const FoodModalContainer: React.FC<Props> = (props) => {
@@ -15,7 +15,7 @@ const FoodModalContainer: React.FC<Props> = (props) => {
     router.push(`/users/${userId}`);
   };
 
-  const updateServerData = useUpdateServerData();
+  // const updateServerData = useUpdateServerData();
   const handleCreate = async (food: { name: string; calories: number }) => {
     setLoading(true);
     try {
@@ -23,8 +23,8 @@ const FoodModalContainer: React.FC<Props> = (props) => {
         ...food,
         user: +userId,
       });
-      const { foods } = await services.fetchUserFoods(+userId);
-      updateServerData((prevData) => ({ ...prevData, foods }));
+      const { foods, meta: foodsMeta } = await services.fetchUserFoods(+userId);
+      // updateServerData((prevData) => ({ ...prevData, foods, foodsMeta }));
       setLoading(false);
       handleClose();
 
@@ -49,12 +49,12 @@ const FoodModalContainer: React.FC<Props> = (props) => {
     submitRef.current = submit;
   };
 
-  const [inDom, setInDom] = React.useState(false);
+  const [isClientSide, setIsClientSide] = React.useState(false);
   React.useEffect(() => {
-    setInDom(true);
+    setIsClientSide(true);
   }, []);
 
-  const visible = inDom && mode === FoodModalMode.create;
+  const visible = isClientSide && mode === FoodModalMode.create;
 
   return (
     <Modal
