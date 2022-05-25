@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { FaExclamationTriangle } from "react-icons/fa";
+import { WarningOutlined } from "@ant-design/icons";
 import Layout from "@src/shared/components/Layout";
 import styled from "styled-components";
 
@@ -19,14 +19,18 @@ Root.displayName = "PagesRoot";
 interface Props {}
 const NotFoundPage: React.FC<Props> = (props) => {
   return (
-    <Root>
-      <h1>
-        <FaExclamationTriangle />
-        404
-      </h1>
-      <h4>Sorry, there is nothing here</h4>
-      <Link href="/">Go back home</Link>
-    </Root>
+    <Layout
+      error={
+        <Root>
+          <h1>
+            <WarningOutlined />
+            &nbsp;404
+          </h1>
+          <h4>Sorry, there is nothing here</h4>
+          <Link href="/">Go back</Link>
+        </Root>
+      }
+    />
   );
 };
 export type NotFoundPageProps = Props;

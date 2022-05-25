@@ -21,7 +21,7 @@ interface Props {
   description?: string;
   paths?: (string | { label: string; link: string })[];
   actions?: JSX.Element | JSX.Element[];
-  error?: AppError;
+  error?: AppError | JSX.Element;
   // menu?: MenuItem[];
   // nav?: MenuItem[];
 }
@@ -53,10 +53,14 @@ const sideMenu: MenuItem[] = [
 ];
 
 const ErrorWrapper: React.FC<{
-  error?: AppError;
+  error?: AppError | JSX.Element;
 }> = ({ error, children }) => {
   if (error) {
-    return <div>{`${error.status}: ${error.message}`}</div>;
+    return "status" in error ? (
+      <div>{`${error.status}: ${error.message}`}</div>
+    ) : (
+      error
+    );
   }
   return <>{children}</>;
 };
